@@ -13,19 +13,21 @@ using LPDWORD = DWORD*;
 #define WINAPI
 #endif
 
+// NOLINTBEGIN(readability-identifier-naming)
 extern "C"
 {
-    __declspec(dllimport) HANDLE WINAPI GetStdHandle(DWORD nStdHandle);
-    __declspec(dllimport) BOOL WINAPI GetConsoleMode(HANDLE hConsoleHandle, LPDWORD lpMode);
+    __declspec(dllimport) auto WINAPI GetStdHandle(DWORD nStdHandle) -> HANDLE;
+    __declspec(dllimport) auto WINAPI GetConsoleMode(HANDLE hConsoleHandle, LPDWORD lpMode) -> BOOL;
 
-    __declspec(dllimport) BOOL WINAPI WriteConsoleW(HANDLE hConsoleOutput, const void* lpBuffer,
-        DWORD nNumberOfCharsToWrite, LPDWORD lpNumberOfCharsWritten, LPVOID lpReserved);
+    __declspec(dllimport) auto WINAPI WriteConsoleW(HANDLE hConsoleOutput, const void* lpBuffer,
+        DWORD nNumberOfCharsToWrite, LPDWORD lpNumberOfCharsWritten, LPVOID lpReserved) -> BOOL;
 
-    __declspec(dllimport) BOOL WINAPI WriteFile(HANDLE hFile, const void* lpBuffer, DWORD nNumberOfBytesToWrite,
-        LPDWORD lpNumberOfBytesWritten, LPVOID lpOverlapped);
+    __declspec(dllimport) auto WINAPI WriteFile(HANDLE hFile, const void* lpBuffer, DWORD nNumberOfBytesToWrite,
+        LPDWORD lpNumberOfBytesWritten, LPVOID lpOverlapped) -> BOOL;
 
     __declspec(dllimport) __declspec(noreturn) void WINAPI ExitProcess(UINT uExitCode);
 }
+// NOLINTEND(readability-identifier-naming)
 
 static_assert(sizeof(wchar_t) == 2, "Windows wchar_t must be UTF-16.");
 
