@@ -1,0 +1,8 @@
+Index:
+  StandardLibrary: No
+
+CompileFlags:
+  Add:
+    - "-std=c++23"
+    - "-Wno-c++98-compat-pedantic"
+    - "-Wno-missing-prototypes"
