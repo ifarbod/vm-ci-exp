@@ -75,6 +75,10 @@ CheckOptions:
     google-readability-braces-around-statements.ShortStatementLines: "1"
     google-readability-function-size.StatementThreshold: "800"
 
+    google-runtime-int.UnsignedTypePrefix: 'u'
+    google-runtime-int.SignedTypePrefix: 'i'
+    google-runtime-int.TypeSuffix: ''
+
     llvm-qualified-auto.AddConstToQualified: "false"
     llvm-else-after-return.WarnOnConditionVariables: "false"
 
