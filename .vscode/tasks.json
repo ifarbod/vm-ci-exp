@@ -1,0 +1,117 @@
+{
+    // Build tasks for the ib project via xmake.
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "ib: MSVC",
+            "detail": "xmake f -p windows --toolchain=msvc -y && xmake",
+            "type": "shell",
+            "command": "xmake f -c -p windows --toolchain=msvc -y && xmake -rv",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "options": {
+                    "shell": {
+                        "executable": "cmd.exe",
+                        "args": [
+                            "/d",
+                            "/c"
+                        ]
+                    }
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": false
+            }
+        },
+        {
+            "label": "ib: GCC",
+            "detail": "xmake f -p mingw -y && xmake",
+            "type": "shell",
+            "command": "xmake f -c -p mingw -y && xmake -rv",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "options": {
+                    "shell": {
+                        "executable": "cmd.exe",
+                        "args": [
+                            "/d",
+                            "/c"
+                        ]
+                    }
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": false
+            }
+        },
+        {
+            "label": "ib: Clang",
+            "detail": "xmake f -p windows --toolchain=clang -y && xmake",
+            "type": "shell",
+            "command": "xmake f -c -p windows --toolchain=clang -y && xmake -rv",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "options": {
+                    "shell": {
+                        "executable": "cmd.exe",
+                        "args": [
+                            "/d",
+                            "/c"
+                        ]
+                    }
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": false
+            }
+        },
+        {
+            "label": "ib: build all (MSVC -> MinGW -> Clang)",
+            "detail": "Builds with MSVC, then MinGW/GCC, then Clang last.",
+            "dependsOn": [
+                "ib: MSVC",
+                "ib: GCC",
+                "ib: Clang"
+            ],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
