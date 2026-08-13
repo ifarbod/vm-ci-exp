@@ -15,7 +15,7 @@ import ib.core;
 /// clang::no_builtin keeps the optimizer from turning the loop into a `strlen`
 /// libcall (there is no libc here) when the call is not constant-folded.
 [[nodiscard, clang::no_builtin("strlen")]]
-constexpr auto str_length(const char* string) noexcept -> usize
+constexpr auto str_length(const char* string) -> usize
 {
     usize length = 0;
     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -70,7 +70,7 @@ extern "C"
 /// Returns the standard input, output, or error handle.
 /// Returns INVALID_HANDLE_VALUE (-1) when the handle cannot be obtained.
 export [[nodiscard]]
-auto get_std_handle(StdHandle which) noexcept -> Handle
+auto get_std_handle(StdHandle which) -> Handle
 {
     constexpr u32 std_input_handle = static_cast<u32>(-10);
     constexpr u32 std_output_handle = static_cast<u32>(-11);
@@ -93,21 +93,21 @@ auto get_std_handle(StdHandle which) noexcept -> Handle
 
 /// Returns whether the given handle refers to a console.
 export [[nodiscard]]
-auto get_console_mode(Handle console, u32* mode) noexcept -> bool
+auto get_console_mode(Handle console, u32* mode) -> bool
 {
     return GetConsoleMode(console, mode) != 0;
 }
 
 /// Writes UTF-16 text to a console output handle.
 export [[nodiscard]]
-auto write_console_w(Handle output, const wchar_t* text, u32 chars, u32* written) noexcept -> bool
+auto write_console_w(Handle output, const wchar_t* text, u32 chars, u32* written) -> bool
 {
     return WriteConsoleW(output, text, chars, written, nullptr) != 0;
 }
 
 /// Writes raw bytes to any file-like handle (console or redirected).
 export [[nodiscard]]
-auto write_file(Handle file, const void* data, u32 bytes, u32* written) noexcept -> bool
+auto write_file(Handle file, const void* data, u32 bytes, u32* written) -> bool
 {
     return WriteFile(file, data, bytes, written, nullptr) != 0;
 }
@@ -115,7 +115,7 @@ auto write_file(Handle file, const void* data, u32 bytes, u32* written) noexcept
 /// Writes raw bytes to the standard output stream.
 /// \return the number of bytes written, or a negative value on failure.
 export [[nodiscard]]
-auto print(const void* data, usize size) noexcept -> isize
+auto print(const void* data, usize size) -> isize
 {
     // GetStdHandle() returns INVALID_HANDLE_VALUE (-1) on failure.
     Handle output = get_std_handle(StdHandle::Output);
@@ -136,14 +136,14 @@ auto print(const void* data, usize size) noexcept -> isize
 /// Writes a NUL-terminated string to the standard output stream.
 /// Returns the number of bytes written, or a negative value on failure.
 export [[nodiscard]]
-auto print(const char* string) noexcept -> isize
+auto print(const char* string) -> isize
 {
     return print(string, str_length(string));
 }
 
 /// Terminates the process with the given exit code.
 export [[noreturn]]
-void exit(isize status) noexcept
+void exit(isize status)
 {
     ExitProcess(static_cast<u32>(status));
 
@@ -190,7 +190,7 @@ export constexpr usize SYS_EXIT = 5058;
 // amd64: write=1, exit=60
 #if defined(IB_ARCH_AMD64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize rax __asm__("rax") = static_cast<isize>(n);
     register isize rdi __asm__("rdi") = static_cast<isize>(a1);
@@ -205,7 +205,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // i386: write=4, exit=1
 #elif defined(IB_ARCH_I386)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize eax __asm__("eax") = static_cast<isize>(n);
     register isize ebx __asm__("ebx") = static_cast<isize>(a1);
@@ -220,7 +220,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // AArch64: write=64, exit=93
 #elif defined(IB_ARCH_AARCH64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize x0 __asm__("x0") = static_cast<isize>(a1);
     register isize x1 __asm__("x1") = static_cast<isize>(a2);
@@ -235,7 +235,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // ARMv7 EABI: write=4, exit=1
 #elif defined(IB_ARCH_ARM)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize r0 __asm__("r0") = static_cast<isize>(a1);
     register isize r1 __asm__("r1") = static_cast<isize>(a2);
@@ -250,7 +250,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // MIPS64 little-endian, n64 ABI: __NR_Linux=5000, write=5001, exit=5058
 #elif defined(IB_ARCH_MIPS64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register usize v0 __asm__("$2") = n;
     register usize a0 __asm__("$4") = a1;
@@ -265,7 +265,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // PowerPC64 little-endian: write=4, exit=1
 #elif defined(IB_ARCH_PPC64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize r0 __asm__("r0") = static_cast<isize>(n);
     register isize r3 __asm__("r3") = static_cast<isize>(a1);
@@ -282,7 +282,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // RISC-V 64: write=64, exit=93
 #elif defined(IB_ARCH_RISCV64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize a0 __asm__("a0") = static_cast<isize>(a1);
     register isize a1r __asm__("a1") = static_cast<isize>(a2);
@@ -297,7 +297,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // IBM Z / s390x: write=4, exit=1
 #elif defined(IB_ARCH_S390X)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize r1 __asm__("r1") = static_cast<isize>(n);
     register isize r2 __asm__("r2") = static_cast<isize>(a1);
@@ -312,7 +312,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // LoongArch64: write=64, exit=93
 #elif defined(IB_ARCH_LOONGARCH64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize a0 __asm__("a0") = static_cast<isize>(a1);
     register isize a1r __asm__("a1") = static_cast<isize>(a2);
@@ -335,7 +335,7 @@ export constexpr usize SYS_EXIT = 1;
 // amd64
 #if defined(IB_ARCH_AMD64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     isize ret = 0;
     register isize r10 __asm__("r10") = 0;
@@ -353,7 +353,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // number goes in eax, and the trap is `int $0x80`.
 #elif defined(IB_ARCH_I386)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     isize ret = 0;
     __asm__ volatile("pushl %4\n\t"
@@ -372,7 +372,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // AArch64
 #elif defined(IB_ARCH_AARCH64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize x8 __asm__("x8") = static_cast<isize>(n);
     register isize x0 __asm__("x0") = static_cast<isize>(a1);
@@ -387,7 +387,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // ARMv7
 #elif defined(IB_ARCH_ARM)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize r7 __asm__("r7") = static_cast<isize>(n);
     register isize r0 __asm__("r0") = static_cast<isize>(a1);
@@ -402,7 +402,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // PowerPC64 (also covers powerpc64le)
 #elif defined(IB_ARCH_PPC64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize r0 __asm__("r0") = static_cast<isize>(n);
     register isize r3 __asm__("r3") = static_cast<isize>(a1);
@@ -420,7 +420,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // RISC-V 64
 #elif defined(IB_ARCH_RISCV64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize a7 __asm__("a7") = static_cast<isize>(n);
     register isize a0 __asm__("a0") = static_cast<isize>(a1);
@@ -445,7 +445,7 @@ export constexpr usize SYS_EXIT = 0x2000001;
 // amd64
 #if defined(IB_ARCH_AMD64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize rax __asm__("rax") = static_cast<isize>(n);
     register isize rdi __asm__("rdi") = static_cast<isize>(a1);
@@ -460,7 +460,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // AArch64
 #elif defined(IB_ARCH_AARCH64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize x0 __asm__("x0") = static_cast<isize>(a1);
     register isize x1 __asm__("x1") = static_cast<isize>(a2);
@@ -485,7 +485,7 @@ export constexpr usize SYS_EXIT = 1;
 // amd64 (SysV syscall ABI)
 #if defined(IB_ARCH_AMD64)
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize rax __asm__("rax") = static_cast<isize>(n);
     register isize rdi __asm__("rdi") = static_cast<isize>(a1);
@@ -501,7 +501,7 @@ auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
 // Note: macros.hpp has no SPARC arch macro yet, so raw __sparc* checks are used.
 #elif defined(__sparcv9) || defined(__sparc64__) || (defined(__sparc__) && defined(__arch64__))
 export [[nodiscard]]
-auto syscall3(usize n, usize a1, usize a2, usize a3) noexcept -> isize
+auto syscall3(usize n, usize a1, usize a2, usize a3) -> isize
 {
     register isize o0 __asm__("o0") = static_cast<isize>(a1);
     register isize o1 __asm__("o1") = static_cast<isize>(a2);
@@ -533,7 +533,7 @@ export constexpr isize STDERR = 2;
 /// Writes up to `size` bytes to the given file descriptor.
 /// Returns the number of bytes written, or a negative error code on failure.
 export [[nodiscard]]
-auto write(isize fd, const void* data, usize size) noexcept -> isize
+auto write(isize fd, const void* data, usize size) -> isize
 {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     return syscall3(SYS_WRITE, static_cast<usize>(fd), reinterpret_cast<usize>(data), size);
@@ -542,7 +542,7 @@ auto write(isize fd, const void* data, usize size) noexcept -> isize
 /// Writes a NUL-terminated string to the given file descriptor.
 /// Returns the number of bytes written, or a negative error code on failure.
 export [[nodiscard]]
-auto write_string(isize fd, const char* string) noexcept -> isize
+auto write_string(isize fd, const char* string) -> isize
 {
     return write(fd, string, str_length(string));
 }
@@ -550,7 +550,7 @@ auto write_string(isize fd, const char* string) noexcept -> isize
 /// Writes raw bytes to the standard output stream.
 /// Returns the number of bytes written, or a negative error code on failure.
 export [[nodiscard]]
-auto print(const void* data, usize size) noexcept -> isize
+auto print(const void* data, usize size) -> isize
 {
     return write(STDOUT, data, size);
 }
@@ -558,7 +558,7 @@ auto print(const void* data, usize size) noexcept -> isize
 /// Writes a NUL-terminated string to the standard output stream.
 /// Returns the number of bytes written, or a negative error code on failure.
 export [[nodiscard]]
-auto print(const char* string) noexcept -> isize
+auto print(const char* string) -> isize
 {
     return write_string(STDOUT, string);
 }
@@ -569,7 +569,7 @@ auto print(const char* string) noexcept -> isize
 
 /// Terminates the process with the given exit status.
 export [[noreturn]]
-void exit(isize status) noexcept
+void exit(isize status)
 {
     static_cast<void>(syscall3(SYS_EXIT, static_cast<usize>(status), 0, 0));
     __builtin_unreachable();
