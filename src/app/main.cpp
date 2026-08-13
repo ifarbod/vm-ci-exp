@@ -5,7 +5,7 @@
 import ib.core;
 import ib.sys;
 
-auto main() -> i32
+auto ib_main() -> i32
 {
     ib::sys::print("Hello from ib!\n");
     return 0;

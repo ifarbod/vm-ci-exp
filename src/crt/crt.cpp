@@ -5,9 +5,9 @@
 import ib.core;
 import ib.sys;
 
-auto main() -> i32;
+auto ib_main() -> i32;
 
 extern "C" [[noreturn]] void _start()
 {
-    ib::sys::exit(main());
+    ib::sys::exit(ib_main());
 }
