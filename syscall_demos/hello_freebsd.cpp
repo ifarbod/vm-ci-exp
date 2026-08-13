@@ -12,7 +12,7 @@ inline constexpr long SYS_write = 4;
 // only the register/instruction convention differs.
 // -----------------------------------------------------------------------------
 #if defined(__amd64__)
-static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
+static long fbsd_syscall3(long n, long a1, long a2, long a3)
 {
     long ret;
     register long r10 __asm__("r10") = 0;
@@ -26,7 +26,7 @@ static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
 }
 
 #elif defined(__i386__)
-static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
+static long fbsd_syscall3(long n, long a1, long a2, long a3)
 {
     // FreeBSD i386 ABI: args passed on the stack (like a normal C call),
     // syscall number in %eax, invoked via `int $0x80`.
@@ -44,7 +44,7 @@ static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
 }
 
 #elif defined(__aarch64__)
-static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
+static long fbsd_syscall3(long n, long a1, long a2, long a3)
 {
     register long x8 __asm__("x8") = n;
     register long x0 __asm__("x0") = a1;
@@ -55,7 +55,7 @@ static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
 }
 
 #elif defined(__arm__)
-static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
+static long fbsd_syscall3(long n, long a1, long a2, long a3)
 {
     register long r7 __asm__("r7") = n;
     register long r0 __asm__("r0") = a1;
@@ -67,7 +67,7 @@ static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
 
 #elif defined(__powerpc__) || defined(__powerpc64__)
 // Covers powerpc, powerpc64, powerpc64le, powerpcspe.
-static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
+static long fbsd_syscall3(long n, long a1, long a2, long a3)
 {
     register long r0 __asm__("r0") = n;
     register long r3 __asm__("r3") = a1;
@@ -81,7 +81,7 @@ static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
 }
 
 #elif defined(__riscv) && (__riscv_xlen == 64)
-static long fbsd_syscall3(long n, long a1, long a2, long a3) noexcept
+static long fbsd_syscall3(long n, long a1, long a2, long a3)
 {
     register long a7 __asm__("a7") = n;
     register long a0 __asm__("a0") = a1;
@@ -103,7 +103,7 @@ using usize = decltype(sizeof(nullptr));
 using isize = decltype("" - "");
 
 [[nodiscard]]
-static constexpr usize str_len(const char* s) noexcept
+static constexpr usize str_len(const char* s)
 {
     usize n = 0;
     while (s[n] != '\0')
@@ -113,13 +113,13 @@ static constexpr usize str_len(const char* s) noexcept
     return n;
 }
 
-static long sys_write(int fd, const char* buf, usize len) noexcept
+static long sys_write(int fd, const char* buf, usize len)
 {
     return fbsd_syscall3(SYS_write, static_cast<long>(fd), reinterpret_cast<long>(buf), static_cast<long>(len));
 }
 
 [[noreturn]]
-static void sys_exit(int code) noexcept
+static void sys_exit(int code)
 {
     fbsd_syscall3(SYS_exit, static_cast<long>(code), 0, 0);
     __builtin_unreachable();
@@ -129,7 +129,7 @@ static void sys_exit(int code) noexcept
 // Entry point. We use `_start` and set -nostdlib so no CRT is needed.
 // -----------------------------------------------------------------------------
 extern "C" [[noreturn]]
-void _start() noexcept
+void _start()
 {
     constexpr const char msg[] = "Hello from freestanding FreeBSD C++23!\n";
     (void)sys_write(1, msg, str_len(msg));

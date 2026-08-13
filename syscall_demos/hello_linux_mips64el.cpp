@@ -15,7 +15,7 @@ constexpr usize sys_exit = 5058;
 constexpr usize stdout_fd = 1;
 
 [[nodiscard]]
-inline isize syscall3(usize number, usize arg0, usize arg1, usize arg2) noexcept
+inline isize syscall3(usize number, usize arg0, usize arg1, usize arg2)
 {
     register usize v0 asm("$2") = number;
     register usize a0 asm("$4") = arg0;
@@ -28,7 +28,7 @@ inline isize syscall3(usize number, usize arg0, usize arg1, usize arg2) noexcept
 }
 
 [[noreturn]]
-inline void syscall_exit(usize status) noexcept
+inline void syscall_exit(usize status)
 {
     register usize v0 asm("$2") = sys_exit;
     register usize a0 asm("$4") = status;
@@ -39,7 +39,7 @@ inline void syscall_exit(usize status) noexcept
 }
 
 [[nodiscard]]
-inline isize write(usize fd, const void* buffer, usize length) noexcept
+inline isize write(usize fd, const void* buffer, usize length)
 {
     return syscall3(sys_write, fd, reinterpret_cast<usize>(buffer), static_cast<usize>(length));
 }
@@ -47,7 +47,7 @@ inline isize write(usize fd, const void* buffer, usize length) noexcept
 }  // namespace linux_mips64_n64
 
 extern "C" [[noreturn]]
-void _start() noexcept
+void _start()
 {
     static constexpr char message[] = "Hello from direct MIPS64EL Linux syscalls.\n";
 
