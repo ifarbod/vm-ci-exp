@@ -4,6 +4,8 @@
 
 #pragma once
 
+// NOLINTBEGIN(cppcoreguidelines-macro-usage)
+
 // MARK: compiler
 
 #ifdef __clang__
@@ -15,7 +17,6 @@
 #else
 #define IB_COMPILER_UNKNOWN 1
 #endif
-
 
 // MARK: os
 
@@ -53,7 +54,6 @@
 #define IB_OS_UNKNOWN 1
 #endif
 
-
 // MARK: arch
 
 #if defined(__amd64__) || defined(_M_AMD64)
@@ -78,7 +78,7 @@
 #define IB_ARCH_UNKNOWN 1
 #endif
 
-// TODO: add convient swift-like macros
+// TODO: add convenient swift-like macros
 // #if COMPILER(MSVC)
 // #if OS(WINDOWS)
 // #if ARCH(AMD64)
@@ -97,8 +97,6 @@
 // IB_WARNING_DISABLE_CLANG_PUSH("-Wfloat-equal")
 // code
 // IB_WARNING_DISABLE_CLANG_POP
-
-// NOLINTBEGIN(cppcoreguidelines-macro-usage)
 
 #define IB_PRAGMA_TO_STR(x) _Pragma(#x)
 
@@ -123,7 +121,8 @@
 #define IB_WARNING_DISABLE_GCC_CLANG_PUSH(warning) IB_WARNING_PUSH IB_WARNING_DISABLE_GCC_CLANG(warning)
 #define IB_WARNING_DISABLE_GCC_CLANG_POP IB_WARNING_POP
 
-#define IB_WARNING_DISABLE_DEPRECATED IB_WARNING_DISABLE_CLANG("-Wdeprecated-declarations") IB_WARNING_DISABLE_CLANG("-Wdeprecated-pragma")
+#define IB_WARNING_DISABLE_DEPRECATED \
+    IB_WARNING_DISABLE_CLANG("-Wdeprecated-declarations") IB_WARNING_DISABLE_CLANG("-Wdeprecated-pragma")
 
 #elifdef IB_COMPILER_GCC
 
@@ -196,6 +195,21 @@
 
 #define IB_WARNING_DISABLE_DEPRECATED
 
+#endif
+
+// MARK: utils
+
+#define IB_DISCARD(expr) (static_cast<void>(expr))
+// we also need something like std::ignore
+// very good post by Raymond Chen: https://devblogs.microsoft.com/oldnewthing/20240329-00/?p=109592
+// https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2968r2.html
+
+#ifdef IB_COMPILER_CLANG
+#define IB_UNREACHABLE() __builtin_unreachable()
+#elifdef IB_COMPILER_GCC
+#define IB_UNREACHABLE() __builtin_unreachable()
+#elifdef IB_COMPILER_MSVC
+#define IB_UNREACHABLE() __assume(false)
 #endif
 
 // NOLINTEND(cppcoreguidelines-macro-usage)
