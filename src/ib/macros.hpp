@@ -10,10 +10,25 @@
 
 #ifdef __clang__
 #define IB_COMPILER_CLANG 1
+
+#if __clang_major__ < 21
+#error "Clang version 21 or higher is required"
+#endif
+
 #elifdef __GNUC__
 #define IB_COMPILER_GCC 1
+
+#if __GNUC__ < 15
+#error "GCC version 15 or higher is required"
+#endif
+
 #elifdef _MSC_VER
 #define IB_COMPILER_MSVC 1
+
+#if _MSC_VER < 1944
+#error "MSVC version 19.44 or higher is required"
+#endif
+
 #else
 #define IB_COMPILER_UNKNOWN 1
 #endif
