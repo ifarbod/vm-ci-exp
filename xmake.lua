@@ -11,7 +11,7 @@ add_rules("mode.debug", "mode.releasedbg", "mode.release")
 add_rules("plugin.vsxmake.autoupdate")
 add_rules("plugin.compile_commands.autoupdate")
 
-set_allowedplats("windows", "mingw", "linux", "macosx", "bsd", "wasm", "android")
+set_allowedplats("windows", "mingw", "linux", "cross", "macosx", "bsd", "wasm", "android")
 set_defaultplat("windows")
 set_allowedarchs(
     "windows|x86",
@@ -47,9 +47,43 @@ set_policy("build.c++.modules.std", false)
 
 --- MARK: this is my first attempt xd
 
+rule("ib.warnings", function ()
+    on_config(function (target)
+        if target:has_tool("cxx", "clang", "clangxx", "clang_cl") then
+            target:add("cxxflags", "-Weverything", "-Wno-c++98-compat-pedantic", "-Wno-missing-prototypes", {force = true})
+        elseif target:has_tool("cxx", "gcc", "gxx") then
+            target:add("cxxflags",
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
+                "-Wshadow",
+                "-Wconversion",
+                "-Wsign-conversion",
+                "-Wcast-align",
+                "-Wunused",
+                "-Wnull-dereference",
+                "-Wdouble-promotion",
+                "-Wformat=2",
+                "-Wimplicit-fallthrough",
+                "-Wduplicated-cond",
+                "-Wduplicated-branches",
+                "-Wlogical-op",
+                {force = true})
+        elseif target:has_tool("cxx", "cl") then
+            target:add("cxxflags", "/Wall", {force = true})
+            target:add("cxxflags", "/wd5030", {force = true}) -- unknown attribute
+        end
+    end)
+end)
+
 function ib_library(name, configure)
     target(name, function ()
         set_kind("static")
+
+        add_rules("ib.warnings")
+
+        add_cxxflags("-fno-rtti", {tools = {"clang", "gcc", "clangxx", "clang_cl", "gxx"}, force = true})
+        set_exceptions("no-cxx")
 
         if configure then
             configure()
@@ -60,6 +94,32 @@ end
 function ib_executable(name, configure)
     target(name, function ()
         set_kind("binary")
+
+        add_rules("ib.warnings")
+
+        add_cxxflags("-fno-rtti", {tools = {"clang", "gcc", "clangxx", "clang_cl", "gxx"}, force = true})
+        set_exceptions("no-cxx")
+
+        add_ldflags("/NODEFAULTLIB", {tools = "link", force = true})
+        add_ldflags("-Wl,/NODEFAULTLIB", {tools = "clang", force = true})
+
+        add_ldflags("/SUBSYSTEM:CONSOLE", {tools = "link", force = true})
+        add_ldflags("-Wl,/SUBSYSTEM:CONSOLE", {tools = "clang", force = true})
+
+        add_ldflags("/ENTRY:ib_start", {tools = "link", force = true})
+        add_ldflags("-Wl,/ENTRY:ib_start", {tools = "clang", force = true})
+
+        if is_plat("linux") then
+            add_ldflags("-nostartfiles", "-Wl,-e,ib_start", {tools = {"gcc", "gxx", "clang", "clangxx"}, force = true})
+        end
+
+        if is_plat("mingw") then
+            add_ldflags("-nostartfiles", "-Wl,-e,ib_start", "-Wl,--subsystem,console", {tools = {"gcc", "gxx", "clang", "clangxx"}, force = true})
+        end
+
+        if is_plat("windows", "mingw") then
+            add_links("kernel32")
+        end
 
         add_deps("ib")
         add_files("src/crt/crt.cpp")
@@ -76,8 +136,6 @@ ib_library("ib", function ()
     add_headerfiles("src/ib/**.hpp")
     add_files("src/ib/**.cpp", "src/ib/**.cppm", {public = true})
 
-    add_cxxflags("-Wno-c++23-extensions", {tools = "clang", force = true})
-
     add_forceincludes(path.absolute(path.join(os.projectdir(), "src/ib/macros.hpp")))
 end)
 
@@ -85,8 +143,6 @@ ib_executable("ib_app", function ()
     set_group("ib")
 
     add_files("src/app/**.cpp")
-
-    add_cxxflags("-Wno-c++23-extensions", {tools = "clang", force = true})
 
     add_forceincludes(path.absolute(path.join(os.projectdir(), "src/ib/macros.hpp")))
 end)

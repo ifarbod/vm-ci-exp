@@ -7,7 +7,7 @@ import ib.sys;
 
 auto ib_main() -> i32;
 
-extern "C" [[noreturn]] void _start()
+extern "C" [[noreturn]] void ib_start()
 {
     ib::sys::exit(ib_main());
 }

@@ -2,7 +2,4 @@
 //
 // SPDX-License-Identifier: LicenseRef-Proprietary
 
-export module ib.core;
-
-export import :types;
-export import :builtin;
+export module ib.core:builtin;

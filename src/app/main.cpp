@@ -7,6 +7,7 @@ import ib.sys;
 
 auto ib_main() -> i32
 {
-    ib::sys::print("Hello from ib!\n");
+    // ReSharper disable once CppNoDiscardExpression
+    IB_DISCARD(ib::sys::print("Hello from ib!\n"));
     return 0;
 }
