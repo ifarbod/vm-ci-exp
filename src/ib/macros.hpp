@@ -209,7 +209,7 @@
 
 #define IB_PRAGMA_TO_STR(x) _Pragma(#x)
 
-#ifdef IB_COMPILER_CLANG
+#if COMPILER(CLANG)
 
 #define IB_WARNING_PUSH IB_PRAGMA_TO_STR(clang diagnostic push)
 #define IB_WARNING_POP IB_PRAGMA_TO_STR(clang diagnostic pop)
@@ -233,7 +233,7 @@
 #define IB_WARNING_DISABLE_DEPRECATED \
     IB_WARNING_DISABLE_CLANG("-Wdeprecated-declarations") IB_WARNING_DISABLE_CLANG("-Wdeprecated-pragma")
 
-#elifdef IB_COMPILER_GCC
+#elif COMPILER(GCC)
 
 #define IB_WARNING_PUSH IB_PRAGMA_TO_STR(GCC diagnostic push)
 #define IB_WARNING_POP IB_PRAGMA_TO_STR(GCC diagnostic pop)
@@ -256,7 +256,7 @@
 
 #define IB_WARNING_DISABLE_DEPRECATED IB_WARNING_DISABLE_GCC("-Wdeprecated-declarations")
 
-#elifdef IB_COMPILER_MSVC
+#elif COMPILER(MSVC)
 
 #undef IB_PRAGMA_TO_STR
 
@@ -310,11 +310,11 @@
 
 #define IB_DISCARD(expr) (static_cast<void>(expr))
 
-#ifdef IB_COMPILER_CLANG
+#if COMPILER(CLANG)
 #define IB_UNREACHABLE() __builtin_unreachable()
-#elifdef IB_COMPILER_GCC
+#elif COMPILER(GCC)
 #define IB_UNREACHABLE() __builtin_unreachable()
-#elifdef IB_COMPILER_MSVC
+#elif COMPILER(MSVC)
 #define IB_UNREACHABLE() __assume(false)
 #endif
 
