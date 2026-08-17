@@ -36,9 +36,9 @@ jobs:
 
       - name: Install clang-format
         run: |
-          sudo apt-get update
-          sudo apt-get install clang-format-${{ env.LLVM_VERSION }}
-          sudo ln -sf "$(command -v clang-format-${{ env.LLVM_VERSION }})" /usr/local/bin/clang-format
+          apt-get update
+          apt-get install clang-format-${{ env.LLVM_VERSION }}
+          ln -sf "$(command -v clang-format-${{ env.LLVM_VERSION }})" /usr/local/bin/clang-format
           clang-format --version
 
       - name: Setup Xmake
