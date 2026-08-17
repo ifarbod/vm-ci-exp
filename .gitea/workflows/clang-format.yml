@@ -1,0 +1,76 @@
+name: Clang Format
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+      - "scripts/**"
+      - "LICENSE.md"
+      - "README.md"
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+      - "scripts/**"
+      - "LICENSE.md"
+      - "README.md"
+
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}-clang-format
+  cancel-in-progress: true
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-vanilla-stonking
+    env:
+      LLVM_VERSION: 22
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install clang-format-${{ env.LLVM_VERSION }}
+          sudo ln -sf "$(command -v clang-format-${{ env.LLVM_VERSION }})" /usr/local/bin/clang-format
+          clang-format --version
+
+      - name: Setup Xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+
+      - name: Run clang-format
+        run: xmake format
+
+      - name: Diff
+        id: diff
+        run: |
+          git diff | tee clang-format.patch
+          if [[ -s clang-format.patch ]]; then
+            echo "formatted=false" >> $GITHUB_OUTPUT
+          else
+            echo "formatted=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload Patch
+        if: steps.diff.outputs.formatted == 'false'
+        uses: actions/upload-artifact@v3
+        with:
+          name: clang-format.patch
+          path: clang-format.patch
+
+      - name: Block Pipeline
+        if: steps.diff.outputs.formatted == 'false'
+        run: |
+          echo "::error::Code is not formatted!"
+          echo "Either run clang-format-${{ env.LLVM_VERSION }} locally,"
+          echo "or download the clang-format.patch file and apply via"
+          echo "$ git apply clang-format.patch"
+          exit 1
