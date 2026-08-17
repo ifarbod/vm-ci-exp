@@ -41,13 +41,13 @@ jobs:
           ln -sf "$(command -v clang-format-${{ env.LLVM_VERSION }})" /usr/local/bin/clang-format
           clang-format --version
 
-      - name: Setup Xmake
-        uses: xmake-io/github-action-setup-xmake@v1
-        with:
-          xmake-version: latest
+      # - name: Setup Xmake
+      #   uses: xmake-io/github-action-setup-xmake@v1
+      #   with:
+      #     xmake-version: latest
 
       - name: Run clang-format
-        run: xmake format
+        run: XMAKE_ROOT=y xmake format
 
       - name: Diff
         id: diff
