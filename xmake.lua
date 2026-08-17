@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: LicenseRef-Proprietary
 
 set_project("ib")
-set_xmakever("3.1.0")
+set_xmakever("3.0.9") -- raise to 3.1.0 later
 
 set_languages("c23", "cxx23")
 
