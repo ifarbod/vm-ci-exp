@@ -37,7 +37,7 @@ jobs:
       - name: Install clang-format
         run: |
           apt-get update
-          apt-get install clang-format-${{ env.LLVM_VERSION }}
+          apt-get install -y clang-format-${{ env.LLVM_VERSION }}
           ln -sf "$(command -v clang-format-${{ env.LLVM_VERSION }})" /usr/local/bin/clang-format
           clang-format --version
 
