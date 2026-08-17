@@ -14,11 +14,12 @@ import :detail;
 
 namespace ib::sys
 {
+
 /// Windows API handle (HANDLE), as returned by get_std_handle().
 export using Handle = void*;
 
 /// Standard device handles, as passed to get_std_handle().
-export enum class StdHandle : u8
+enum class StdHandle : u8
 {
     Input,   // STD_INPUT_HANDLE
     Output,  // STD_OUTPUT_HANDLE
