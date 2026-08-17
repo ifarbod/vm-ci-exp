@@ -10,7 +10,8 @@ export module ib.sys:syscall_solaris_sparc64;
 
 import ib.core;
 
-#if defined(IB_OS_SOLARIS) && (defined(__sparcv9) || defined(__sparc64__) || (defined(__sparc__) && defined(__arch64__)))
+#if defined(IB_OS_SOLARIS) && \
+    (defined(__sparcv9) || defined(__sparc64__) || (defined(__sparc__) && defined(__arch64__)))
 
 namespace ib::sys
 {

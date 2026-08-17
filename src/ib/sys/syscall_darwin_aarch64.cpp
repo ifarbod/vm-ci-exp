@@ -55,10 +55,7 @@ auto syscall7(usize n, usize a1, usize a2, usize a3, usize a4, usize a5, usize a
     register isize x6 __asm__("x6") = static_cast<isize>(a7);
     register isize x16 __asm__("x16") = static_cast<isize>(n);
 
-    __asm__ volatile("svc #0"
-        : "+r"(x0)
-        : "r"(x1), "r"(x2), "r"(x3), "r"(x4), "r"(x5), "r"(x6), "r"(x16)
-        : "memory");
+    __asm__ volatile("svc #0" : "+r"(x0) : "r"(x1), "r"(x2), "r"(x3), "r"(x4), "r"(x5), "r"(x6), "r"(x16) : "memory");
 
     return x0;
 }
