@@ -11,7 +11,7 @@ export module ib.sys:syscall_solaris;
 export import :syscall_solaris_amd64;
 export import :syscall_solaris_sparc64;
 
-#ifdef IB_OS_SOLARIS
+#if OS(SOLARIS)
 
 import ib.core;
 
@@ -22,4 +22,4 @@ export constexpr usize SYS_EXIT = 1;
 export constexpr usize SYS_MMAP = 115;
 }  // namespace ib::sys
 
-#endif  // IB_OS_SOLARIS
+#endif  // OS(SOLARIS)

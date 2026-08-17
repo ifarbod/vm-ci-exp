@@ -10,7 +10,7 @@ export module ib.sys:syscall_windows;
 import ib.core;
 import :detail;
 
-#ifdef IB_OS_WINDOWS
+#if OS(WINDOWS)
 
 namespace ib::sys
 {
@@ -18,7 +18,8 @@ namespace ib::sys
 export using Handle = void*;
 
 /// Standard device handles, as passed to get_std_handle().
-export enum class StdHandle : u8 {
+export enum class StdHandle : u8
+{
     Input,   // STD_INPUT_HANDLE
     Output,  // STD_OUTPUT_HANDLE
     Error,   // STD_ERROR_HANDLE
@@ -26,7 +27,7 @@ export enum class StdHandle : u8 {
 
 static_assert(sizeof(wchar_t) == 2, "Windows wchar_t must be UTF-16.");
 
-#ifdef IB_ARCH_I386
+#if ARCH(I386)
 #define IB_WINAPI __stdcall
 #else
 #define IB_WINAPI
@@ -139,12 +140,12 @@ void exit(isize status)
 {
     ExitProcess(static_cast<u32>(status));
 
-#if defined(IB_COMPILER_CLANG) || defined(IB_COMPILER_GCC)
+#if COMPILER(CLANG) || COMPILER(GCC)
     __builtin_unreachable();
-#elifdef IB_COMPILER_MSVC
+#elif COMPILER(MSVC)
     __assume(false);
 #endif
 }
 }  // namespace ib::sys
 
-#endif  // IB_OS_WINDOWS
+#endif  // OS(WINDOWS)

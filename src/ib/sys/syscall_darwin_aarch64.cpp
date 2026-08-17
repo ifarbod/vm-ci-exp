@@ -10,7 +10,7 @@ export module ib.sys:syscall_darwin_aarch64;
 
 import ib.core;
 
-#if defined(IB_OS_MACOS) && defined(IB_ARCH_AARCH64)
+#if OS(MACOS) && ARCH(AARCH64)
 
 namespace ib::sys
 {
@@ -61,4 +61,4 @@ auto syscall7(usize n, usize a1, usize a2, usize a3, usize a4, usize a5, usize a
 }
 }  // namespace ib::sys
 
-#endif  // IB_OS_MACOS && IB_ARCH_AARCH64
+#endif  // OS(MACOS) && ARCH(AARCH64)

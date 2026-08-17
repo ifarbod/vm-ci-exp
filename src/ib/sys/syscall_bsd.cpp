@@ -16,7 +16,7 @@ export import :syscall_bsd_arm;
 export import :syscall_bsd_ppc64;
 export import :syscall_bsd_riscv64;
 
-#if defined(IB_OS_FREEBSD) || defined(IB_OS_OPENBSD) || defined(IB_OS_NETBSD) || defined(IB_OS_DRAGONFLY)
+#if OS(FREEBSD) || OS(OPENBSD) || OS(NETBSD) || OS(DRAGONFLY)
 
 import ib.core;
 

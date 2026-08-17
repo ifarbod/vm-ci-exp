@@ -8,7 +8,7 @@ export module ib.sys:syscall_linux_s390x;
 
 import ib.core;
 
-#if defined(IB_OS_LINUX) && defined(IB_ARCH_S390X)
+#if OS(LINUX) && ARCH(S390X)
 
 namespace ib::sys
 {
@@ -46,4 +46,4 @@ auto syscall6(usize n, usize a1, usize a2, usize a3, usize a4, usize a5, usize a
 }
 }  // namespace ib::sys
 
-#endif  // IB_OS_LINUX && IB_ARCH_S390X
+#endif  // OS(LINUX) && ARCH(S390X)

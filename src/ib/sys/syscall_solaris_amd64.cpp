@@ -8,7 +8,7 @@ export module ib.sys:syscall_solaris_amd64;
 
 import ib.core;
 
-#if defined(IB_OS_SOLARIS) && defined(IB_ARCH_AMD64)
+#if OS(SOLARIS) && ARCH(AMD64)
 
 namespace ib::sys
 {
@@ -45,4 +45,4 @@ auto syscall6(usize n, usize a1, usize a2, usize a3, usize a4, usize a5, usize a
 }
 }  // namespace ib::sys
 
-#endif  // IB_OS_SOLARIS && IB_ARCH_AMD64
+#endif  // OS(SOLARIS) && ARCH(AMD64)

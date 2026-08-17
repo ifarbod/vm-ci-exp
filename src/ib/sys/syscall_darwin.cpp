@@ -11,7 +11,7 @@ export module ib.sys:syscall_darwin;
 export import :syscall_darwin_amd64;
 export import :syscall_darwin_aarch64;
 
-#ifdef IB_OS_MACOS
+#if OS(MACOS)
 
 import ib.core;
 
@@ -22,4 +22,4 @@ export constexpr usize SYS_EXIT = 0x2000001;
 export constexpr usize SYS_MMAP = 0x20000c5;
 }  // namespace ib::sys
 
-#endif  // IB_OS_MACOS
+#endif  // OS(MACOS)

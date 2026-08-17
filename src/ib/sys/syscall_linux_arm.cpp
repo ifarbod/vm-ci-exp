@@ -8,7 +8,7 @@ export module ib.sys:syscall_linux_arm;
 
 import ib.core;
 
-#if defined(IB_OS_LINUX) && defined(IB_ARCH_ARM)
+#if OS(LINUX) && ARCH(ARM)
 
 namespace ib::sys
 {
@@ -46,4 +46,4 @@ auto syscall6(usize n, usize a1, usize a2, usize a3, usize a4, usize a5, usize a
 }
 }  // namespace ib::sys
 
-#endif  // IB_OS_LINUX && IB_ARCH_ARM
+#endif  // OS(LINUX) && ARCH(ARM)

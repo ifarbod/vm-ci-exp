@@ -10,7 +10,7 @@ export module ib.sys:syscall_openbsd;
 
 export import :syscall_bsd;
 
-#ifdef IB_OS_OPENBSD
+#if OS(OPENBSD)
 
 import ib.core;
 
@@ -19,4 +19,4 @@ namespace ib::sys
 export constexpr usize SYS_MMAP = 49;
 }  // namespace ib::sys
 
-#endif  // IB_OS_OPENBSD
+#endif  // OS(OPENBSD)

@@ -9,7 +9,7 @@ export module ib.sys:syscall_freebsd;
 
 export import :syscall_bsd;
 
-#ifdef IB_OS_FREEBSD
+#if OS(FREEBSD)
 
 import ib.core;
 
@@ -18,4 +18,4 @@ namespace ib::sys
 export constexpr usize SYS_MMAP = 477;
 }  // namespace ib::sys
 
-#endif  // IB_OS_FREEBSD
+#endif  // OS(FREEBSD)

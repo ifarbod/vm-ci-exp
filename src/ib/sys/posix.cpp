@@ -26,8 +26,7 @@ import :syscall_dragonfly;
 import :syscall_darwin;
 import :syscall_solaris;
 
-#if defined(IB_OS_LINUX) || defined(IB_OS_FREEBSD) || defined(IB_OS_OPENBSD) || defined(IB_OS_NETBSD) || \
-    defined(IB_OS_DRAGONFLY) || defined(IB_OS_MACOS) || defined(IB_OS_SOLARIS)
+#if OS(LINUX) || OS(FREEBSD) || OS(OPENBSD) || OS(NETBSD) || OS(DRAGONFLY) || OS(MACOS) || OS(SOLARIS)
 
 namespace ib::sys
 {
@@ -45,7 +44,7 @@ export [[nodiscard]]
 auto mmap(void* addr, usize length, i32 prot, i32 flags, i32 fd, isize offset) -> void*
 {
     isize result = 0;
-#if defined(IB_OS_LINUX) && (defined(IB_ARCH_I386) || defined(IB_ARCH_ARM))
+#if OS(LINUX) && (ARCH(I386) || ARCH(ARM))
     // 32-bit Linux exposes mmap2, whose offset is measured in 4096-byte units.
     constexpr isize page_size = 4096;
     if ((offset & (page_size - 1)) != 0)
@@ -54,7 +53,7 @@ auto mmap(void* addr, usize length, i32 prot, i32 flags, i32 fd, isize offset) -
     }
     result = syscall6(SYS_MMAP2, reinterpret_cast<usize>(addr), length, static_cast<usize>(prot),
         static_cast<usize>(flags), static_cast<usize>(fd), static_cast<usize>(offset / page_size));
-#elif defined(IB_OS_NETBSD) || defined(IB_OS_OPENBSD) || defined(IB_OS_MACOS)
+#elif OS(NETBSD) || OS(OPENBSD) || OS(MACOS)
     // NetBSD's, OpenBSD's, and macOS's mmap take a padding argument between fd
     // and offset.
     result = syscall7(SYS_MMAP, reinterpret_cast<usize>(addr), length, static_cast<usize>(prot),

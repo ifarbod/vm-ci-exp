@@ -8,7 +8,7 @@ export module ib.sys:syscall_linux_riscv64;
 
 import ib.core;
 
-#if defined(IB_OS_LINUX) && defined(IB_ARCH_RISCV64)
+#if OS(LINUX) && ARCH(RISCV64)
 
 namespace ib::sys
 {
@@ -46,4 +46,4 @@ auto syscall6(usize n, usize a1, usize a2, usize a3, usize a4, usize a5, usize a
 }
 }  // namespace ib::sys
 
-#endif  // IB_OS_LINUX && IB_ARCH_RISCV64
+#endif  // OS(LINUX) && ARCH(RISCV64)

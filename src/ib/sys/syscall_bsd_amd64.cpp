@@ -9,8 +9,7 @@ export module ib.sys:syscall_bsd_amd64;
 
 import ib.core;
 
-#if (defined(IB_OS_FREEBSD) || defined(IB_OS_OPENBSD) || defined(IB_OS_NETBSD) || defined(IB_OS_DRAGONFLY)) && \
-    defined(IB_ARCH_AMD64)
+#if (OS(FREEBSD) || OS(OPENBSD) || OS(NETBSD) || OS(DRAGONFLY)) && ARCH(AMD64)
 
 namespace ib::sys
 {
@@ -44,7 +43,7 @@ auto syscall6(usize n, usize a1, usize a2, usize a3, usize a4, usize a5, usize a
     return ret;
 }
 
-#if defined(IB_OS_NETBSD) || defined(IB_OS_OPENBSD)
+#if OS(NETBSD) || OS(OPENBSD)
 export [[nodiscard]]
 auto syscall7(usize n, usize a1, usize a2, usize a3, usize a4, usize a5, usize a6, usize a7) -> isize
 {
@@ -62,7 +61,7 @@ auto syscall7(usize n, usize a1, usize a2, usize a3, usize a4, usize a5, usize a
         : "rcx", "r11", "memory");
     return ret;
 }
-#endif  // IB_OS_NETBSD || IB_OS_OPENBSD
+#endif  // OS(NETBSD) || OS(OPENBSD)
 }  // namespace ib::sys
 
-#endif  // any BSD && IB_ARCH_AMD64
+#endif  // any BSD && ARCH(AMD64)

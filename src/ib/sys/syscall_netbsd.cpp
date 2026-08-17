@@ -10,7 +10,7 @@ export module ib.sys:syscall_netbsd;
 
 export import :syscall_bsd;
 
-#ifdef IB_OS_NETBSD
+#if OS(NETBSD)
 
 import ib.core;
 
@@ -19,4 +19,4 @@ namespace ib::sys
 export constexpr usize SYS_MMAP = 197;
 }  // namespace ib::sys
 
-#endif  // IB_OS_NETBSD
+#endif  // OS(NETBSD)
