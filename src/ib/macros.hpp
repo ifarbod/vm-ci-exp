@@ -110,6 +110,12 @@
 #define IB_OS_SOLARIS 0
 #endif
 
+#ifdef __illumos__
+#define IB_OS_ILLUMOS 1
+#else
+#define IB_OS_ILLUMOS 0
+#endif
+
 #ifdef __OHOS__
 #define IB_OS_OHOS 1
 #else
@@ -117,7 +123,7 @@
 #endif
 
 #if !IB_OS_WINDOWS && !IB_OS_ANDROID && !IB_OS_MACOS && !IB_OS_IOS && !IB_OS_LINUX && !IB_OS_FREEBSD && \
-    !IB_OS_OPENBSD && !IB_OS_NETBSD && !IB_OS_DRAGONFLY && !IB_OS_SOLARIS && !IB_OS_OHOS
+    !IB_OS_OPENBSD && !IB_OS_NETBSD && !IB_OS_DRAGONFLY && !IB_OS_SOLARIS && !IB_OS_ILLUMOS && !IB_OS_OHOS
 #define IB_OS_UNKNOWN 1
 #else
 #define IB_OS_UNKNOWN 0
