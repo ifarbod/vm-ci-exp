@@ -37,12 +37,12 @@
 #error "Clang version 21 or higher is required"
 #endif
 #elif IB_COMPILER_GCC
-#if __GNUC__ < 15
-#error "GCC version 15 or higher is required"
+#if __GNUC__ < 16
+#error "GCC version 16 or higher is required"
 #endif
 #elif IB_COMPILER_MSVC
-#if _MSC_VER < 1944
-#error "MSVC version 19.44 or higher is required"
+#if _MSC_VER < 1951
+#error "MSVC version 19.51 or higher is required"
 #endif
 #endif
 
