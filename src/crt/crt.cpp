@@ -12,3 +12,10 @@ void ib_start()
 {
     ib::sys::exit(ib_main());
 }
+
+#if OS(MACOS)
+extern "C" void dyld_stub_binder()
+{
+    // must panic
+}
+#endif
