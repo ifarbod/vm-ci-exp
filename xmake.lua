@@ -135,7 +135,7 @@ rule("ib.entrypoint", function ()
             target:add("ldflags", "-nostartfiles", "-Wl,-e," .. entry, "-Wl,--subsystem,console", {tools = gnu, force = true})
         elseif pi.binfmt == "macho" then
             -- macOS / iOS: -nostdlib, custom entry (Mach-O underscores C symbols)
-            target:add("ldflags", "-nostdlib", "-Wl,-e," .. entry, {tools = {"clang", "clangxx"}, force = true})
+            target:add("ldflags", "-nostdlib", "-static", "-Wl,-e," .. entry, {tools = {"clang", "clangxx"}, force = true})
         elseif pi.binfmt == "wasm" then
             target:add("ldflags", "-Wl,--no-entry", {tools = gnu, force = true})
         else
