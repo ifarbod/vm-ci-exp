@@ -24,19 +24,20 @@ jobs:
   build-linux:
     runs-on: ubuntu-vanilla-stonking
     env:
+      GCC_VERSION: 16
       LLVM_VERSION: 22
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install Clang
+      - name: Install GCC & Clang
         run: |
           apt-get update
-          apt-get install -y clang-${{ env.LLVM_VERSION }}
+          apt-get install -y g++-${{ env.GCC_VERSION }} clang-${{ env.LLVM_VERSION }}
           ln -sf "$(command -v clang-${{ env.LLVM_VERSION }})" /usr/local/bin/clang
 
-          gcc -v
+          gcc-16 -v
           clang -v
 
       - name: Setup Xmake
@@ -46,7 +47,7 @@ jobs:
 
       - name: Compile with GCC
         run: |
-          XMAKE_ROOT=y xmake f -c -p linux
+          XMAKE_ROOT=y xmake f -c -p linux --toolchain=gcc-16
           XMAKE_ROOT=y xmake -rv
 
       - name: Compile with Clang
