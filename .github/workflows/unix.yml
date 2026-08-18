@@ -1,0 +1,141 @@
+name: BSD & Unix
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+      - "scripts/**"
+      - "LICENSE.md"
+      - "README.md"
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+      - "scripts/**"
+      - "LICENSE.md"
+      - "README.md"
+
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  freebsd:
+    name: FreeBSD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build & run in FreeBSD VM
+        uses: vmactions/freebsd-vm@v1
+        with:
+          usesh: true
+          prepare: |
+            pkg install -y git gmake readline curl bash
+          run: |
+            set -e
+            curl -fsSL https://xmake.io/shget.text | bash
+            . ~/.xmake/profile 2>/dev/null || true
+            export PATH="$HOME/.local/bin:$PATH"
+            clang -v
+            xmake f -c -p cross --cross=x86_64-unknown-freebsd --toolchain=clang
+            xmake -rv
+            xmake run
+
+  openbsd:
+    name: OpenBSD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build & run in OpenBSD VM
+        uses: vmactions/openbsd-vm@v1
+        with:
+          usesh: true
+          prepare: |
+            pkg_add git gmake readline bash curl
+          run: |
+            set -e
+            curl -fsSL https://xmake.io/shget.text | bash
+            . ~/.xmake/profile 2>/dev/null || true
+            export PATH="$HOME/.local/bin:$PATH"
+            clang -v
+            xmake f -c -p cross --cross=x86_64-unknown-openbsd --toolchain=clang
+            xmake -rv
+            xmake run
+
+  netbsd:
+    name: NetBSD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build & run in NetBSD VM
+        uses: vmactions/netbsd-vm@v1
+        with:
+          usesh: true
+          prepare: |
+            pkgin -y install git gmake readline bash curl
+          run: |
+            set -e
+            curl -fsSL https://xmake.io/shget.text | bash
+            . ~/.xmake/profile 2>/dev/null || true
+            export PATH="$HOME/.local/bin:$PATH"
+            clang -v
+            xmake f -c -p cross --cross=x86_64-unknown-netbsd --toolchain=clang
+            xmake -rv
+            xmake run
+
+  dragonfly:
+    name: DragonFly BSD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build & run in DragonFly BSD VM
+        uses: vmactions/dragonflybsd-vm@v1
+        with:
+          usesh: true
+          prepare: |
+            pkg install -y git gmake readline curl bash llvm
+          run: |
+            set -e
+            curl -fsSL https://xmake.io/shget.text | bash
+            . ~/.xmake/profile 2>/dev/null || true
+            export PATH="$HOME/.local/bin:$PATH"
+            clang -v
+            xmake f -c -p cross --cross=x86_64-unknown-dragonfly --toolchain=clang
+            xmake -rv
+            xmake run
+
+  openindiana:
+    name: OpenIndiana
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build & run in OpenIndiana VM
+        uses: vmactions/openindiana-vm@v1
+        with:
+          usesh: true
+          prepare: |
+            pkg install build-essential pkg:/developer/clang-18 pkg:/shell/bash pkg:/network/curl
+          run: |
+            set -e
+            curl -fsSL https://xmake.io/shget.text | bash
+            . ~/.xmake/profile 2>/dev/null || true
+            export PATH="$HOME/.local/bin:$PATH"
+            clang -v
+            xmake f -c -p cross --cross=x86_64-pc-solaris2.11 --toolchain=clang
+            xmake -rv
+            xmake run
