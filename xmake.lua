@@ -94,6 +94,19 @@ rule("ib.clang.target", function ()
     end)
 end)
 
+rule("ib.freestanding", function ()
+    on_config(function (target)
+        target:add("cxxflags", "-ffreestanding", "-fno-builtin",
+            {tools = {"clang", "gcc", "clangxx", "gxx", "clang_cl"}, force = true})
+        target:add("cxxflags", "-nostdinc",
+            {tools = {"clang", "clangxx"}, force = true})
+        target:add("cxxflags", "-nostdinc",
+            {tools = {"gcc", "gxx"}, force = true})
+        target:add("cxxflags", "/X",
+            {tools = {"cl", "clang_cl"}, force = true})
+    end)
+end)
+
 -- Entry point + subsystem + artifact shape, driven by the normalized platform.
 -- Works for native plats and -p cross --cross=<triple> alike.
 rule("ib.entrypoint", function ()
@@ -140,6 +153,7 @@ function ib_library(name, configure)
 
         add_rules("ib.warnings")
         add_rules("ib.clang.target")
+        add_rules("ib.freestanding")
 
         add_cxxflags("-fno-rtti", "-fno-stack-protector", {tools = {"clang", "gcc", "clangxx", "gxx"}, force = true})
         add_cxxflags("/GS-", {tools = {"cl", "clang_cl"}, force = true})
@@ -158,6 +172,7 @@ function ib_executable(name, configure)
         add_rules("ib.warnings")
         add_rules("ib.clang.target")
         add_rules("ib.entrypoint")
+        add_rules("ib.freestanding")
 
         add_cxxflags("-fno-rtti", "-fno-stack-protector", {tools = {"clang", "gcc", "clangxx", "gxx"}, force = true})
         add_cxxflags("/GS-", {tools = {"cl", "clang_cl"}, force = true})
