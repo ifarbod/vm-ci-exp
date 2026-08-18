@@ -88,7 +88,7 @@ rule("ib.clang.target", function ()
 
         -- apple-clang (only present on macOS hosts) needs this to enable C++20
         -- modules; upstream clang handles them natively.
-        if pi.os == "macos" and os.host() == "macos" then
+        if pi.os == "macos" and is_host("macosx") then
             target:add("cxxflags", "-fcxx-modules", {force = true})
         end
     end)
