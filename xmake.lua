@@ -90,6 +90,7 @@ rule("ib.clang.target", function ()
         local triple = triples[target:arch()]
         if triple then
             target:add("cxxflags", "--target="..triple, {force = true})
+            target:add("cxxflags", "-fcxx-modules", {force = true}) -- TODO(iFarbod): until we find a better way to limit this to apple-clang
             target:add("ldflags", "--target="..triple, {force = true})
         end
     end)
