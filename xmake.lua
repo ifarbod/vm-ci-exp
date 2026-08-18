@@ -84,13 +84,13 @@ rule("ib.clang.target", function ()
 
         local triples = {
             x86_64 = "x86_64-apple-macos11.0",
-            arm64 = "arm64-apple-macos11.0"
+            arm64 = "aarch64-apple-macos11.0"
         }
 
         local triple = triples[target:arch()]
         if triple then
-            target:add("cxxflags", "-target", triple, {force = true})
-            target:add("ldflags", "-target", triple, {force = true})
+            target:add("cxxflags", "--target="..triple, {force = true})
+            target:add("ldflags", "--target="..triple, {force = true})
         end
     end)
 end)
