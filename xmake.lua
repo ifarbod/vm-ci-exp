@@ -94,7 +94,7 @@ rule("ib.clang.target", function ()
             target:add("ldflags", "--target="..triple, {force = true})
 
             target:add("ldflags", "-v", {force = true}) -- TODO(iFarbod): compiler option for this?
-            target:add("-lz", {force = true, remove = true})
+            target:remove("ldflags", "-lz", {force = true})
         end
     end)
 end)
