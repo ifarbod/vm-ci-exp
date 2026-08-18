@@ -41,8 +41,11 @@ jobs:
         run: |
           xmake f -c -p cross --cross=x86_64-apple-macos11.0 --toolchain=clang
           xmake -rv
+          file build/cross/x86_64/debug/ib_app
+          xmake run
 
       - name: Compile with Clang (Apple Silicon)
         run: |
           xmake f -c -p cross --cross=aarch64-apple-macos11.0 --toolchain=clang
           xmake -rv
+          file build/cross/arm64/debug/ib_app
