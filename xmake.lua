@@ -90,9 +90,9 @@ rule("ib.clang.target", function ()
         -- modules; upstream clang handles them natively.
         if pi.os == "macos" and is_host("macosx") then
             target:add("cxxflags", "-fcxx-modules", {force = true})
-
-            target:add("ldflags", "-v", {force = true})
         end
+
+        target:add("ldflags", "-v", {force = true})
     end)
 end)
 
@@ -140,7 +140,12 @@ rule("ib.entrypoint", function ()
             target:add("ldflags", "-Wl,--no-entry", {tools = gnu, force = true})
         else
             -- linux / freebsd / openbsd / netbsd / dragonfly / solaris / android
-            target:add("ldflags", "-nostartfiles", "-nostdlib", "-Wl,-e," .. entry, {tools = gnu, force = true})
+            target:add("ldflags", "-nostartfiles", "-nostdlib", "-static", "-Wl,-e," .. entry, {tools = gnu, force = true})
+            if pi.plat == "cross" then
+                -- Cross-linking must go through lld; clang's Solaris target would
+                -- otherwise try to invoke the host's Solaris linker.
+                target:add("ldflags", "-fuse-ld=lld", {tools = gnu, force = true})
+            end
         end
 
         if pi.os == "windows" or pi.os == "mingw" then
