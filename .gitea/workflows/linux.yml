@@ -46,6 +46,7 @@ jobs:
 
       - name: Compile with GCC
         run: |
+          XMAKE_ROOT=y xmake f -c -p linux
           XMAKE_ROOT=y xmake -rv
 
       - name: Compile with Clang
