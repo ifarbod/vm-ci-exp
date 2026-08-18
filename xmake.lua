@@ -141,11 +141,11 @@ rule("ib.entrypoint", function ()
         else
             -- linux / freebsd / openbsd / netbsd / dragonfly / solaris / android
             target:add("ldflags", "-nostartfiles", "-nostdlib", "-static", "-Wl,-e," .. entry, {tools = gnu, force = true})
-            if pi.plat == "cross" then
-                -- Cross-linking must go through lld; clang's Solaris target would
-                -- otherwise try to invoke the host's Solaris linker.
-                target:add("ldflags", "-fuse-ld=lld", {tools = gnu, force = true})
-            end
+            -- if pi.plat == "cross" then
+            --     -- Cross-linking must go through lld; clang's Solaris target would
+            --     -- otherwise try to invoke the host's Solaris linker.
+            --     target:add("ldflags", "-fuse-ld=lld", {tools = gnu, force = true})
+            -- end
         end
 
         if pi.os == "windows" or pi.os == "mingw" then
