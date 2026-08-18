@@ -90,6 +90,8 @@ rule("ib.clang.target", function ()
         -- modules; upstream clang handles them natively.
         if pi.os == "macos" and is_host("macosx") then
             target:add("cxxflags", "-fcxx-modules", {force = true})
+
+            target:add("ldflags", "-v", {force = true})
         end
     end)
 end)
