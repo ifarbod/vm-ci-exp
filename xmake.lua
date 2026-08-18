@@ -76,13 +76,34 @@ rule("ib.warnings", function ()
     end)
 end)
 
+rule("ib.clang.target", function ()
+    on_config(function (target)
+        if not is_plat("macosx") then
+            return
+        end
+
+        local triples = {
+            x86_64 = "x86_64-apple-macos11.0",
+            arm64 = "arm64-apple-macos11.0"
+        }
+
+        local triple = triples[target:arch()]
+        if triple then
+            target:add("cxxflags", "-target", triple, {force = true})
+            target:add("ldflags", "-target", triple, {force = true})
+        end
+    end)
+end)
+
 function ib_library(name, configure)
     target(name, function ()
         set_kind("static")
 
         add_rules("ib.warnings")
+        add_rules("ib.clang.target")
 
-        add_cxxflags("-fno-rtti", {tools = {"clang", "gcc", "clangxx", "clang_cl", "gxx"}, force = true})
+        add_cxxflags("-fno-rtti", "-fno-stack-protector", {tools = {"clang", "gcc", "clangxx", "gxx"}, force = true})
+        add_cxxflags("/GS-", {tools = {"cl", "clang_cl"}, force = true})
         set_exceptions("no-cxx")
 
         if configure then
@@ -96,21 +117,29 @@ function ib_executable(name, configure)
         set_kind("binary")
 
         add_rules("ib.warnings")
+        add_rules("ib.clang.target")
 
-        add_cxxflags("-fno-rtti", {tools = {"clang", "gcc", "clangxx", "clang_cl", "gxx"}, force = true})
+        add_cxxflags("-fno-rtti", "-fno-stack-protector", {tools = {"clang", "gcc", "clangxx", "gxx"}, force = true})
+        add_cxxflags("/GS-", {tools = {"cl", "clang_cl"}, force = true})
         set_exceptions("no-cxx")
 
-        add_ldflags("/NODEFAULTLIB", {tools = "link", force = true})
-        add_ldflags("-Wl,/NODEFAULTLIB", {tools = "clang", force = true})
+        if is_plat("windows") then
+            add_ldflags("/NODEFAULTLIB", {tools = "link", force = true})
+            add_ldflags("-Wl,/NODEFAULTLIB", {tools = "clang", force = true})
 
-        add_ldflags("/SUBSYSTEM:CONSOLE", {tools = "link", force = true})
-        add_ldflags("-Wl,/SUBSYSTEM:CONSOLE", {tools = "clang", force = true})
+            add_ldflags("/SUBSYSTEM:CONSOLE", {tools = "link", force = true})
+            add_ldflags("-Wl,/SUBSYSTEM:CONSOLE", {tools = "clang", force = true})
 
-        add_ldflags("/ENTRY:ib_start", {tools = "link", force = true})
-        add_ldflags("-Wl,/ENTRY:ib_start", {tools = "clang", force = true})
+            add_ldflags("/ENTRY:ib_start", {tools = "link", force = true})
+            add_ldflags("-Wl,/ENTRY:ib_start", {tools = "clang", force = true})
+        end
 
         if is_plat("linux") then
-            add_ldflags("-nostartfiles", "-Wl,-e,ib_start", {tools = {"gcc", "gxx", "clang", "clangxx"}, force = true})
+            add_ldflags("-nostartfiles", "-nostdlib", "-Wl,-e,ib_start", {tools = {"gcc", "gxx", "clang", "clangxx"}, force = true})
+        end
+
+        if is_plat("macosx") then
+            add_ldflags("-nostdlib", "-Wl,-e,_ib_start", {tools = {"clang", "clangxx"}, force = true})
         end
 
         if is_plat("mingw") then
