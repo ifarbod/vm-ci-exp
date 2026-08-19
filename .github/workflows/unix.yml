@@ -42,8 +42,9 @@ jobs:
           run: |
             set -e
             export PATH="$HOME/.local/bin:$PATH"
+            export XMAKE_ROOT=y
             clang21 -v
-            xmake f -c -p cross --cross=x86_64-unknown-freebsd --toolchain=clang
+            xmake f -c -p cross --cross=x86_64-unknown-freebsd --toolchain=clang --cc=clang21 --cxx=clang++21 --ld=clang++21 --ar=llvm-ar21
             xmake -rv
             xmake run
 
@@ -60,11 +61,12 @@ jobs:
           usesh: true
           prepare: |
             pkg_add git gmake devel/llvm/21 readline bash curl
+            curl -fsSL https://xmake.io/shget.text | bash || true
           run: |
             set -e
-            curl -fsSL https://xmake.io/shget.text | bash
             . ~/.xmake/profile 2>/dev/null || true
             export PATH="$HOME/.local/bin:$PATH"
+            export XMAKE_ROOT=y
             clang -v
             xmake f -c -p cross --cross=x86_64-unknown-openbsd --toolchain=clang
             xmake -rv
@@ -85,7 +87,6 @@ jobs:
             pkgin -y install git gmake gcc16 clang readline bash curl
           run: |
             set -e
-            curl -fsSL https://xmake.io/shget.text | bash
             . ~/.xmake/profile 2>/dev/null || true
             export PATH="$HOME/.local/bin:$PATH"
             clang -v
