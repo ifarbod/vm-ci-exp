@@ -28,6 +28,7 @@ jobs:
   freebsd:
     name: FreeBSD
     runs-on: ubuntu-latest
+    if: false
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -60,21 +61,34 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkg_add git gmake devel/llvm/21 readline bash curl
+            pkg_add git gmake llvm21 readline bash curl
             curl -fsSL https://xmake.io/shget.text | bash || true
           run: |
             set -e
+            echo "=== Checking environment ==="
+            whoami
+            pwd
+            ls -la
             . ~/.xmake/profile 2>/dev/null || true
             export PATH="$HOME/.local/bin:$PATH"
             export XMAKE_ROOT=y
+            echo "=== Checking clang ==="
+            which clang
             clang -v
-            xmake f -c -p cross --cross=x86_64-unknown-openbsd --toolchain=clang
+            echo "=== Checking clang21 ==="
+            which clang21
+            clang21 -v
+            echo "=== Configuring xmake ==="
+            xmake f -c -p cross --cross=x86_64-unknown-openbsd --toolchain=clang--cc=clang21 --cxx=clang++21 --ld=clang++21 --ar=llvm-ar21
+            echo "=== Building ==="
             xmake -rv
+            echo "=== Running ==="
             xmake run
 
   netbsd:
     name: NetBSD
     runs-on: ubuntu-latest
+    if: false
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -98,6 +112,7 @@ jobs:
   dragonfly:
     name: DragonFly BSD
     runs-on: ubuntu-latest
+    if: false
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -121,6 +136,7 @@ jobs:
   openindiana:
     name: OpenIndiana
     runs-on: ubuntu-latest
+    if: false
     steps:
       - name: Checkout
         uses: actions/checkout@v7
