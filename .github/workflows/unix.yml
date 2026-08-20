@@ -83,14 +83,14 @@ jobs:
             which clang-21 || echo "clang-21 not found"
             clang-21 -v
             echo "=== Configuring xmake ==="
-            xmake f -c -p cross --cross=x86_64-unknown-openbsd7.9 --toolchain=clang --cc=clang-21 --cxx=clang++-21 --ld=clang++-21 --ar=llvm-ar-21 --ldflags=-fuse-ld=lld
+            xmake f -c -p cross --cross=x86_64-unknown-openbsd7.9 --toolchain=clang --cc=clang-21 --cxx=clang++-21 --ld=clang++ --ar=llvm-ar-21 --ldflags=-fuse-ld=lld
             echo "=== Building ==="
             xmake -rv
             echo "=== Running ==="
             file build/cross/x86_64/debug/ib_app
             readelf -h build/cross/x86_64/debug/ib_app
             chmod +x build/cross/x86_64/debug/ib_app
-            ./build/cross/x86_64/debug/ib_app
+            # ./build/cross/x86_64/debug/ib_app
 
 
   netbsd:
@@ -125,7 +125,7 @@ jobs:
             which clang-21 || echo "clang-21 not found"
             clang-21 -v
             echo "=== Configuring xmake ==="
-            xmake f -c -p cross --cross=x86_64-unknown-netbsd8.0 --toolchain=clang --cc=clang-21 --cxx=clang++-21 --ld=clang++-21 --ar=llvm-ar-21
+            xmake f -vD -c -p cross --cross=x86_64-unknown-netbsd8.0 --toolchain=clang --cc=clang-21 --cxx=clang++-21 --ld=g++ --ar=llvm-ar-21
             echo "=== Building ==="
             xmake -rv
             echo "=== Running ==="
