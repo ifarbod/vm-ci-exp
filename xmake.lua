@@ -140,7 +140,7 @@ rule("ib.entrypoint", function ()
             target:add("ldflags", "-Wl,--no-entry", {tools = gnu, force = true})
         else
             -- linux / freebsd / openbsd / netbsd / dragonfly / solaris / android
-            target:add("ldflags", "-nostartfiles", "-nostdlib", "-static", "-Wl,-e," .. entry, {tools = gnu, force = true})
+            target:add("ldflags", "-nostartfiles", "-nostdlib", "-static", "-Wl,-no-pie", "-Wl,-e," .. entry, {tools = gnu, force = true})
             -- if pi.plat == "cross" then
             --     -- Cross-linking must go through lld; clang's Solaris target would
             --     -- otherwise try to invoke the host's Solaris linker.
@@ -222,8 +222,8 @@ end)
 --     iOS:              xmake f -c -p cross --cross=arm64-apple-ios13.0        --toolchain=clang
 --     FreeBSD:          xmake f -c -p cross --cross=x86_64-unknown-freebsd12.3 --toolchain=clang
 --     OpenBSD:          xmake f -c -p cross --cross=x86_64-unknown-openbsd7.0  --toolchain=clang
---     NetBSD:           xmake f -c -p cross --cross=x86_64-unknown-netbsd9.0   --toolchain=clang
---     DragonFly:        xmake f -c -p cross --cross=x86_64-unknown-dragonfly   --toolchain=clang
+--     NetBSD:           xmake f -c -p cross --cross=x86_64-unknown-netbsd7.0   --toolchain=clang
+--     DragonFly:        xmake f -c -p cross --cross=x86_64-unknown-dragonfly4.6 --toolchain=clang
 --     Android (termux): xmake f -c -p cross --cross=aarch64-linux-android23    --toolchain=clang
 --     Linux:            xmake f -c -p cross --cross=aarch64-linux-gnu          --toolchain=clang
 --     wasm:             xmake f -c -p cross --cross=wasm32-emscripten          --toolchain=clang
