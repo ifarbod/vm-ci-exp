@@ -125,7 +125,7 @@ jobs:
             which clang-21 || echo "clang-21 not found"
             clang-21 -v
             echo "=== Configuring xmake ==="
-            xmake f -vD -c -p cross --cross=x86_64-unknown-netbsd8.0 --toolchain=clang --cc=clang-21 --cxx=clang++-21 --ld=g++ --ar=llvm-ar-21
+            xmake f -vD -c -p cross --cross=x86_64-unknown-netbsd8.0 --toolchain=clang --cc=clang-21 --cxx=clang++ --ld=g++ --ar=llvm-ar
             echo "=== Building ==="
             xmake -rv
             echo "=== Running ==="
