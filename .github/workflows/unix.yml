@@ -148,7 +148,7 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkg install -y git gmake llvm21 readline curl bash
+            pkg install -y git gmake devel/llvm21 readline curl bash
             curl -fsSL https://xmake.io/shget.text | sh || true
           run: |
             set -e
