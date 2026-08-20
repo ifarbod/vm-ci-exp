@@ -148,8 +148,8 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkg install -y git gmake llvm readline curl bash llvm
-            curl -fsSL https://xmake.io/shget.text | bash || true
+            pkg install -y git gmake llvm21 readline curl bash
+            curl -fsSL https://xmake.io/shget.text | sh || true
           run: |
             set -e
             export PATH="$HOME/.local/bin:$PATH"
