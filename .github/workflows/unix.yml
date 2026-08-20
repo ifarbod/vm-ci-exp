@@ -149,7 +149,7 @@ jobs:
           usesh: true
           prepare: |
             pkg search -o llvm
-            pkg install -y git gmake devel/llvm21 readline curl bash
+            pkg install -y git gmake llvm20 readline curl bash
             curl -fsSL https://xmake.io/shget.text | sh || true
           run: |
             set -e
